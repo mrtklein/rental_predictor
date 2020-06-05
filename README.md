@@ -1,4 +1,8 @@
 # rental_predictor
+Die Source CSV Datei muss eingebunden werden
+
+sources/immo_data.csv
+
 
 ToDos:
 - Datenaufbereitung fortführen    Tim
