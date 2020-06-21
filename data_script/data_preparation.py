@@ -1,36 +1,89 @@
 import numpy as np
 import pandas as pd
+from sklearn import preprocessing
 
 
 class Data_Preparation:
+
+    #class memeber for minmax Scale.
+    minmax_scale = None
+
     def get_preparedData(self, df_unprepared):
         print(df_unprepared.info())
         data_selected = self.selectData(df_unprepared)
         data_prepared = self.dropTables(data_selected)
-        self.printdatadetails(data_prepared)
-        return data_prepared
+        data_normalized = self.normalizeColumns(data_prepared)
+        self.printdatadetails(data_normalized)
+        return data_normalized
 
     def selectData(self, df):
         df_cologne = df[df.regio2 == "Köln"]
         # filter out trash
-        # totalRent nicht sinnvoll da oft NaS
         df_baseRent = df_cologne[(df_cologne.baseRent > 100) & (df_cologne.baseRent < 50000)]
 
-        # thermalChar removen? Sehr sparse, und gibt nicht so richtig sinn
-        # geokoordinaten: sind oft falsch, bzw sparse. Ausserdem schwer zu verarbeiten
-        # pricetrend removen? -> da steckt schon preis drinn...
-        # total preis sollte sinnvoll berechnet sein. z.b. total preis wenn nAn, ansonsten base preis + flex, wenn nur basepreis vllt +10% oder so
+        # remove a weired datapoint manually
+        df_baseRent = df_baseRent[df_baseRent.geo_plz != 76530]
 
-        # print uniqe values and their count
-        # self.data_prepared.interiorQual.value_counts(dropna=False)
         return df_baseRent
 
     def dropTables(self, df):
-        # drop useless columns
+        # drop useless columns:
+        # dropping text columns (e.g. description)
+        # dropping other price columns because we will focus on the basePrice
+        # dropping als xxxRange columns because we will normalize it for our subset by our self
+        # dropping advertisment (telekom) columns
+        # dropping useles columns (e.g. date, scoutId, regio, exact address)
+        # dropping sparse columns (e.g. heating type, heatingCosts)
         return df.drop(
             ["regio1", "regio2", "telekomTvOffer", "telekomHybridUploadSpeed", "houseNumber", "street", "streetPlain",
              "description", "electricityBasePrice", "electricityKwhPrice", "date", "scoutId", "geo_bln",
-             "geo_krs", "pricetrend", "telekomUploadSpeed", "baseRentRange", "livingSpaceRange", "facilities"], axis=1)
+             "geo_krs", "pricetrend", "telekomUploadSpeed", "baseRentRange", "livingSpaceRange", "facilities", 'serviceCharge',
+             'heatingType', 'totalRent', 'firingTypes', 'yearConstructedRange', 'thermalChar', 'noRoomsRange', 'facilities',
+             'heatingCosts', 'energyEfficiencyClass', 'lastRefurbish'], axis=1)
+
+    def normalizeColumns(self, df):
+        #convert (yes/no) columns in (0/1) columns
+        df.newlyConst = df.newlyConst.astype(float)
+        df.balcony = df.balcony.astype(float)
+        df.hasKitchen = df.hasKitchen.astype(float)
+        df.cellar = df.cellar.astype(float)
+        df.lift = df.lift.astype(float)
+        df.garden = df.lift.astype(float)
+
+        # convert categorical into ordinal
+        petsAllowedDict = {"no": 0.0, "negotiable": 0.5, "yes": 1.0}
+        df.petsAllowed = df.petsAllowed.replace(petsAllowedDict)
+
+        conditionDict = {   "well_kept": 0.3,
+                            "mint_condition": 1,
+                            "fully_renovated": 0.6,
+                            "first_time_use_after_refurbishment": 1,
+                            "modernized": 0.6,
+                            "refurbished": 0.6,
+                            "first_time_use": 1,
+                            "negotiable" : 0,
+                            "need_of_renovation": 0}
+        df.condition = df.condition.replace(conditionDict)
+
+        interiorQualDict = { "sophisticated": 0.6, "normal": 0.3, "luxury": 1, "simple": 0 }
+        df.interiorQual = df.interiorQual.replace(interiorQualDict)
+
+        # dealing with Nan in ParkSpaces
+        # we can assume that most landlords just set Parking spaces to NaN when they have none,
+        # as opposed to setting it manually to 0. Therefor we manually set all NaNs in this column
+        df.noParkSpaces = df.noParkSpaces.replace({np.nan: 0})
+
+        # one hot encoding
+        df = pd.get_dummies(df, prefix=["geo_plz", "typeOfFlat"], columns=["geo_plz", "typeOfFlat"], dummy_na=True)
+        df = df.drop(["geo_plz_nan"], axis=1)
+
+        # normalize float values
+        self.minmax_scale = preprocessing.MinMaxScaler(feature_range=(0, 1))
+        df[['picturecount', 'yearConstructed', "baseRent", 'livingSpace', 'noRooms', 'floor',	'numberOfFloors']] \
+            = self.minmax_scale.fit_transform(df[['picturecount', 'yearConstructed', "baseRent", 'livingSpace', 'noRooms', 'floor',	'numberOfFloors']])
+        return df
+
+
 
     def printdatadetails(self, df):
         print("\n\n")
