@@ -30,10 +30,14 @@ class Reader:
         return df_all
 
     def csv_reader(self, path):
-        for filepath in glob.glob(path):
-            df = pd.read_csv(filepath)
-            name = self.path_splitter(filepath, name=True)
-            self.safe_dataframe(df, name)
+        test = glob.glob(path)
+        if len(glob.glob(path)) > 0:
+            for filepath in glob.glob(path):
+                df = pd.read_csv(filepath)
+                name = self.path_splitter(filepath, name=True)
+                self.safe_dataframe(df, name)
+        else:
+            raise Exception("Please add at least one csv file within the folder sources!")
 
     def safe_dataframe(self, df, filename):
         pickle.dump(df, open(self.data_path + filename + ".data", "wb"))
