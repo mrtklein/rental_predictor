@@ -14,7 +14,6 @@ for col in data2.columns:
     y = x.dropna()
     print("Column " + col + " containes " + (str(x.size - y.size) + " NaN Values.") )
 
-
 # Plot
 fig, ax = plt.subplots()
 plt.title('Rent vs. Living Space (Red = has Kitchen)')
