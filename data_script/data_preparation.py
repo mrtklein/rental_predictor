@@ -1,7 +1,8 @@
 import numpy as np
 import pandas as pd
 from sklearn import preprocessing
-
+# for KKNimputer scikitt-learn must be at least 0.22 (pip install --upgrade scikit-learn)
+from sklearn.impute import KNNImputer
 
 class Data_Preparation:
 
@@ -13,8 +14,9 @@ class Data_Preparation:
         data_selected = self.selectData(df_unprepared)
         data_prepared = self.dropTables(data_selected)
         data_normalized = self.normalizeColumns(data_prepared)
-        self.printdatadetails(data_normalized)
-        return data_normalized
+        data_imputed = self.imputeData(data_normalized)
+        self.printdatadetails(data_imputed)
+        return data_imputed
 
     def selectData(self, df):
         df_cologne = df[df.regio2 == "Köln"]
@@ -83,7 +85,13 @@ class Data_Preparation:
             = self.minmax_scale.fit_transform(df[['picturecount', 'yearConstructed', "baseRent", 'livingSpace', 'noRooms', 'floor',	'numberOfFloors']])
         return df
 
-
+    def imputeData(self, df):
+        df = df.drop(["regio3"], axis=1)
+        columns = df.columns
+        imputer = KNNImputer(missing_values=np.nan)
+        df = imputer.fit_transform(df)
+        df = pd.DataFrame(df, columns=columns)
+        return df
 
     def printdatadetails(self, df):
         print("\n\n")
