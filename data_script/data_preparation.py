@@ -3,20 +3,35 @@ import pandas as pd
 from sklearn import preprocessing
 # for KKNimputer scikitt-learn must be at least 0.22 (pip install --upgrade scikit-learn)
 from sklearn.impute import KNNImputer
+from visualisation.visualisation import Visualisation as vis
+
 
 class Data_Preparation:
-
-    #class memeber for minmax Scale.
+    # class memeber for minmax Scale.
     minmax_scale = None
 
     def get_preparedData(self, df_unprepared):
         print(df_unprepared.info())
+        print("\nCorrelation matrix unprepared: ")
+        corr_matrix = df_unprepared.corr()
+        print(corr_matrix["baseRent"].sort_values(ascending=False).head(40))
         data_selected = self.selectData(df_unprepared)
         data_prepared = self.dropTables(data_selected)
         data_normalized = self.normalizeColumns(data_prepared)
         data_imputed = self.imputeData(data_normalized)
-        self.printdatadetails(data_imputed)
+        # self.printdatadetails(data_imputed)
+        print("\nCorrelation matrix prepared: ")
+        corr_matrix = data_imputed.corr()
+        print(corr_matrix["baseRent"].sort_values(ascending=False).head(40))
         return data_imputed
+
+    def get_preparedData_withoutNanTreatment(self, df_unprepared):
+        # self.printdatadetails(df_unprepared)
+        data_selected = self.selectData(df_unprepared)
+        data_prepared = self.dropTables(data_selected)
+        data_normalized = self.normalizeColumns(data_prepared)
+        data_woutNan = data_normalized.dropna(axis=1, how='any')
+        return data_woutNan
 
     def selectData(self, df):
         df_cologne = df[df.regio2 == "Köln"]
@@ -39,12 +54,14 @@ class Data_Preparation:
         return df.drop(
             ["regio1", "regio2", "telekomTvOffer", "telekomHybridUploadSpeed", "houseNumber", "street", "streetPlain",
              "description", "electricityBasePrice", "electricityKwhPrice", "date", "scoutId", "geo_bln",
-             "geo_krs", "pricetrend", "telekomUploadSpeed", "baseRentRange", "livingSpaceRange", "facilities", 'serviceCharge',
-             'heatingType', 'totalRent', 'firingTypes', 'yearConstructedRange', 'thermalChar', 'noRoomsRange', 'facilities',
+             "geo_krs", "pricetrend", "telekomUploadSpeed", "baseRentRange", "livingSpaceRange", "facilities",
+             'serviceCharge',
+             'heatingType', 'totalRent', 'firingTypes', 'yearConstructedRange', 'thermalChar', 'noRoomsRange',
+             'facilities', "regio3",
              'heatingCosts', 'energyEfficiencyClass', 'lastRefurbish'], axis=1)
 
     def normalizeColumns(self, df):
-        #convert (yes/no) columns in (0/1) columns
+        # convert (yes/no) columns in (0/1) columns
         df.newlyConst = df.newlyConst.astype(float)
         df.balcony = df.balcony.astype(float)
         df.hasKitchen = df.hasKitchen.astype(float)
@@ -56,18 +73,18 @@ class Data_Preparation:
         petsAllowedDict = {"no": 0.0, "negotiable": 0.5, "yes": 1.0}
         df.petsAllowed = df.petsAllowed.replace(petsAllowedDict)
 
-        conditionDict = {   "well_kept": 0.3,
-                            "mint_condition": 1,
-                            "fully_renovated": 0.6,
-                            "first_time_use_after_refurbishment": 1,
-                            "modernized": 0.6,
-                            "refurbished": 0.6,
-                            "first_time_use": 1,
-                            "negotiable" : 0,
-                            "need_of_renovation": 0}
+        conditionDict = {"well_kept": 0.3,
+                         "mint_condition": 1,
+                         "fully_renovated": 0.6,
+                         "first_time_use_after_refurbishment": 1,
+                         "modernized": 0.6,
+                         "refurbished": 0.6,
+                         "first_time_use": 1,
+                         "negotiable": 0,
+                         "need_of_renovation": 0}
         df.condition = df.condition.replace(conditionDict)
 
-        interiorQualDict = { "sophisticated": 0.6, "normal": 0.3, "luxury": 1, "simple": 0 }
+        interiorQualDict = {"sophisticated": 0.6, "normal": 0.3, "luxury": 1, "simple": 0}
         df.interiorQual = df.interiorQual.replace(interiorQualDict)
 
         # dealing with Nan in ParkSpaces
@@ -81,12 +98,12 @@ class Data_Preparation:
 
         # normalize float values
         self.minmax_scale = preprocessing.MinMaxScaler(feature_range=(0, 1))
-        df[['picturecount', 'yearConstructed', "baseRent", 'livingSpace', 'noRooms', 'floor',	'numberOfFloors']] \
-            = self.minmax_scale.fit_transform(df[['picturecount', 'yearConstructed', "baseRent", 'livingSpace', 'noRooms', 'floor',	'numberOfFloors']])
+        df[['picturecount', 'yearConstructed', "baseRent", 'livingSpace', 'noRooms', 'floor', 'numberOfFloors']] \
+            = self.minmax_scale.fit_transform(
+            df[['picturecount', 'yearConstructed', "baseRent", 'livingSpace', 'noRooms', 'floor', 'numberOfFloors']])
         return df
 
     def imputeData(self, df):
-        df = df.drop(["regio3"], axis=1)
         columns = df.columns
         imputer = KNNImputer(missing_values=np.nan)
         df = imputer.fit_transform(df)
