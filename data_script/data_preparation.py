@@ -92,9 +92,13 @@ class Data_Preparation:
         # as opposed to setting it manually to 0. Therefor we manually set all NaNs in this column
         df.noParkSpaces = df.noParkSpaces.replace({np.nan: 0})
 
+        #filling Nans in TypeOfFlat
+        df.typeOfFlat = df.typeOfFlat.replace({np.nan: "apartment"})
+
         # one hot encoding
-        df = pd.get_dummies(df, prefix=["geo_plz", "typeOfFlat"], columns=["geo_plz", "typeOfFlat"], dummy_na=True)
-        df = df.drop(["geo_plz_nan"], axis=1)
+        df = pd.get_dummies(df, prefix=["geo_plz", "typeOfFlat"], columns=["geo_plz", "typeOfFlat"], dummy_na=False)
+        #df = df.drop(["geo_plz_nan"], axis=1)
+
 
         # normalize float values
         self.minmax_scale = preprocessing.MinMaxScaler(feature_range=(0, 1))
@@ -108,6 +112,7 @@ class Data_Preparation:
         imputer = KNNImputer(missing_values=np.nan)
         df = imputer.fit_transform(df)
         df = pd.DataFrame(df, columns=columns)
+
         return df
 
     def printdatadetails(self, df):
