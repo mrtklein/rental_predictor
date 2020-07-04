@@ -4,25 +4,29 @@ from sklearn import preprocessing
 # for KKNimputer scikitt-learn must be at least 0.22 (pip install --upgrade scikit-learn)
 from sklearn.impute import KNNImputer
 from visualisation.visualisation import Visualisation as vis
-
+from pandas import ExcelWriter
 
 class Data_Preparation:
-    # class memeber for minmax Scale.
-    minmax_scale = None
+    def __init__(self):
+        # class memeber for minmax Scale.
+        self.minmax_scale = None
 
     def get_preparedData(self, df_unprepared):
-        print(df_unprepared.info())
-        print("\nCorrelation matrix unprepared: ")
-        corr_matrix = df_unprepared.corr()
-        print(corr_matrix["baseRent"].sort_values(ascending=False).head(40))
+        # print(df_unprepared.info())
+        # print("\nCorrelation matrix unprepared: ")
+        # corr_matrix = df_unprepared.corr()
+        # corr_matrix_sort=corr_matrix["baseRent"].sort_values(ascending=False)
+        # writer = ExcelWriter('CorrelationMatrix_unpreparedData.xlsx')
+        # corr_matrix_sort.to_excel(writer, 'Sheet5')
+        # writer.save()
         data_selected = self.selectData(df_unprepared)
         data_prepared = self.dropTables(data_selected)
         data_normalized = self.normalizeColumns(data_prepared)
         data_imputed = self.imputeData(data_normalized)
         # self.printdatadetails(data_imputed)
-        print("\nCorrelation matrix prepared: ")
-        corr_matrix = data_imputed.corr()
-        print(corr_matrix["baseRent"].sort_values(ascending=False).head(40))
+        # print("\nCorrelation matrix prepared: ")
+        # corr_matrix = data_imputed.corr()
+        # corr_matrix_sort=corr_matrix["baseRent"].sort_values(ascending=False)
         return data_imputed
 
     def get_preparedData_withoutNanTreatment(self, df_unprepared):
@@ -98,9 +102,10 @@ class Data_Preparation:
 
         # normalize float values
         self.minmax_scale = preprocessing.MinMaxScaler(feature_range=(0, 1))
-        df[['picturecount', 'yearConstructed', "baseRent", 'livingSpace', 'noRooms', 'floor', 'numberOfFloors']] \
+        df[['picturecount', 'yearConstructed', 'livingSpace', 'noRooms', 'floor', 'numberOfFloors']] \
             = self.minmax_scale.fit_transform(
-            df[['picturecount', 'yearConstructed', "baseRent", 'livingSpace', 'noRooms', 'floor', 'numberOfFloors']])
+            df[['picturecount', 'yearConstructed', 'livingSpace', 'noRooms', 'floor', 'numberOfFloors']])
+        # , "baseRent"
         return df
 
     def imputeData(self, df):

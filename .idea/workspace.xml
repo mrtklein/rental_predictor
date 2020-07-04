@@ -2,12 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="64c5a77c-c8e0-4730-930d-9c22f4d89a39" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/visualisation/Scatter/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/rental_predictor.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/rental_predictor.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CorrelationMatrix_preparedData.xlsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CorrelationMatrix_unpreparedData.xlsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/data_script/data.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_script/data.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/data_script/data_preparation.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_script/data_preparation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/trainer.py" beforeDir="false" afterPath="$PROJECT_DIR$/trainer.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/visualisation/visualisation.py" beforeDir="false" afterPath="$PROJECT_DIR$/visualisation/visualisation.py" afterDir="false" />
     </list>
@@ -23,17 +22,18 @@
   <component name="ProjectId" id="1cwkTu9DoQwhzyLJ7qy2c781eI6" />
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$USER_HOME$/OneDrive/Dokumente/Uni Master/Wissenschaftliches Rechnen/handson-ml2/02_end_to_end_machine_learning_project.ipynb" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\kleinoth\PycharmProjects\rental_predictor\datasets" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\kleinoth\PycharmProjects\rental_predictor\models" />
       <recent name="C:\Users\kleinoth\PycharmProjects\rental_predictor\sources" />
       <recent name="C:\Users\kleinoth\PycharmProjects\rental_predictor" />
       <recent name="C:\Users\kleinoth\PycharmProjects\rental_predictor\data_script" />
-    </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\kleinoth\PycharmProjects\rental_predictor\datasets" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -137,6 +137,9 @@
       <workItem from="1593006579144" duration="1531000" />
       <workItem from="1593112970813" duration="19634000" />
       <workItem from="1593200800297" duration="12342000" />
+      <workItem from="1593346298256" duration="368000" />
+      <workItem from="1593697077285" duration="3862000" />
+      <workItem from="1593776286594" duration="18903000" />
     </task>
     <task id="LOCAL-00001" summary="- Folder sources,datasets&#10;- requirements.txt">
       <created>1592827780438</created>
@@ -159,7 +162,14 @@
       <option name="project" value="LOCAL" />
       <updated>1592843402716</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="- linear regression angefangen">
+      <created>1593346416134</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1593346416134</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -182,7 +192,8 @@
     <MESSAGE value="- Folder sources,datasets&#10;- requirements.txt" />
     <MESSAGE value="- gitognore idea" />
     <MESSAGE value="- Sync Read Me" />
-    <option name="LAST_COMMIT_MESSAGE" value="- Sync Read Me" />
+    <MESSAGE value="- linear regression angefangen" />
+    <option name="LAST_COMMIT_MESSAGE" value="- linear regression angefangen" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -194,23 +205,8 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/trainer.py</url>
-          <line>69</line>
-          <option name="timeStamp" value="35" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/data_script/data_preparation.py</url>
-          <line>33</line>
-          <option name="timeStamp" value="36" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/data_script/data.py</url>
-          <line>15</line>
-          <option name="timeStamp" value="38" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/data_script/data_preparation.py</url>
-          <line>25</line>
-          <option name="timeStamp" value="39" />
+          <line>37</line>
+          <option name="timeStamp" value="54" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -224,6 +220,6 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/rental_predictor$visualisation.coverage" NAME="visualisation Coverage Results" MODIFIED="1592829973494" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/visualisation" />
-    <SUITE FILE_PATH="coverage/rental_predictor$main.coverage" NAME="main Coverage Results" MODIFIED="1593257405336" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/rental_predictor$main.coverage" NAME="main Coverage Results" MODIFIED="1593812914241" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

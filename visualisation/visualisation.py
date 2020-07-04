@@ -175,12 +175,3 @@ class Visualisation:
         print(["ocean_proximity"].value_counts())
         print("DEbug")
 
-    def save_fig(self, fig_id, tight_layout=True, fig_extension="png", resolution=300):
-        import reader as rd
-        plotpath = rd.Reader().path_splitter("visualisation/Scatter/.gitignore", diretory=True)
-        path = os.path.join(plotpath,
-                            fig_id + "." + fig_extension)
-        print("Saving figure", fig_id)
-        if tight_layout:
-            plt.tight_layout()
-        plt.savefig(path, format=fig_extension, dpi=resolution)
