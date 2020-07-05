@@ -14,6 +14,9 @@ from sklearn.ensemble import RandomForestRegressor
 import joblib
 from sklearn.linear_model import Lasso
 from sklearn.model_selection import GridSearchCV
+from sklearn.linear_model import ElasticNet
+from sklearn.svm import LinearSVR
+from sklearn.svm import SVR
 
 class Trainer:
     def __init__(self):
@@ -35,10 +38,13 @@ class Trainer:
         print("Number of rows without Nan editing: " + str(len(self.data.data_prepared_woutNanEdit)))
         print("Shape: " + str(self.data.data_prepared_woutNanEdit.shape))
 
-        self.linear_regression()
-        self.decisionTreeRegression()
-        self.randomForestRegression()
-        self.lassoRegressor()
+        #self.linear_regression()
+        #self.decisionTreeRegression()
+        #self.randomForestRegression()
+        #self.lassoRegressor()
+        #self.ElasticNetRegressor()
+        #self.LinearSVRRegressor()
+        self.RBF_SVRRegressor()
 
         #Load a Model
         # model=joblib.load("mymodel.pkl")
@@ -68,6 +74,14 @@ class Trainer:
         lin_mse = mean_squared_error(self.y_test, y_predict)
         lin_rmse = np.sqrt(lin_mse)
         print("RMSE of linear regression: " + str(lin_rmse))
+
+        y_t = np.delete(self.y_test.values, 201)
+        y_t = np.delete(y_t, 163)
+        y_p = np.delete(y_predict, 201)
+        y_p = np.delete(y_p, 163)
+        lin_mse = mean_squared_error(y_t, y_p)
+        lin_rmse = np.sqrt(lin_mse)
+
         lin_scores = cross_val_score(lin_reg, self.inputData_prepared, self.outputData,
                                      scoring="neg_mean_squared_error", cv=10)
         lin_rmse_scores = np.sqrt(-lin_scores)
@@ -115,7 +129,6 @@ class Trainer:
 
 
     def lassoRegressor(self):
-
         bestScore = -99999999
 
         # we look for a good hyperparameter, so we go throgh possible values with a for loop
@@ -130,12 +143,6 @@ class Trainer:
                 bestScore = score
                 bestAlpha = a
 
-        lasso = Lasso(bestAlpha)
-        lasso_model = lasso.fit(self.x_train, self.y_train)
-
-        print()
-
-
         # Dictionary mit Hyperparameterkandidaten erzeugen
         hyperparameters = dict(alpha=alphas)
 
@@ -145,11 +152,65 @@ class Trainer:
         best_model = gridsearch.fit(self.inputData_prepared, self.outputData)
 
         print('Bester Strafterm:', best_model.best_estimator_.get_params()['alpha'])
-        print("lol")
 
-        # test the model on some data
-        #lasso = Lasso(bestAlpha)
-        #model = lasso.fit()
+    def ElasticNetRegressor(self):
+        print(
+            "\n***********************************************************************Elastic Net ")
+        # we look for a good hyperparameter, so we go throgh possible values with a for loop
+        alphas = np.arange(0.1, 1.5, 0.1)
+        l1_ratio = np.arange(0.0, 1.1, 0.1)
+        # Dictionary mit Hyperparameterkandidaten erzeugen
+        hyperparameters = dict(alpha=alphas, l1_ratio=l1_ratio)
+
+        elastic = ElasticNet()
+        # Gittersuche erstellen
+        gridsearch = GridSearchCV(elastic, hyperparameters, cv=10, verbose=0, scoring="neg_mean_squared_error")
+        # Gittersuche anpassen
+        best_model = gridsearch.fit(self.inputData_prepared, self.outputData)
+
+        print('BestAplpha:', best_model.best_estimator_.get_params()['alpha'])
+        print('Best L1 Ratio:', best_model.best_estimator_.get_params()['l1_ratio'])
+        print('Best score :', np.sqrt(-best_model.best_score_))
+        return np.sqrt(-best_model.best_score_)
+
+    def LinearSVRRegressor(self):
+        print(
+            "\n***********************************************************************Linear SVR ")
+        # we look for a good hyperparameter, so we go throgh possible values with a for loop
+        C = np.arange(100, 700, 10)
+        # Dictionary mit Hyperparameterkandidaten erzeugen
+        hyperparameters = dict(C=C)
+
+        svr = LinearSVR()
+        # Gittersuche erstellen
+        gridsearch = GridSearchCV(svr, hyperparameters, cv=10, verbose=0, scoring="neg_mean_squared_error")
+        # Gittersuche anpassen
+        best_model = gridsearch.fit(self.inputData_prepared, self.outputData)
+
+        print('Best C:', best_model.best_estimator_.get_params()['C'])
+        print('Best score :', np.sqrt(-best_model.best_score_))
+        return np.sqrt(-best_model.best_score_)
+
+
+    def RBF_SVRRegressor(self):
+        print(
+            "\n***********************************************************************RBF SVR ")
+        # we look for a good hyperparameter, so we go throgh possible values with a for loop
+        C = np.arange(200, 400, 10)
+        gamma = np.arange(0.01, 1.5, 0.2)
+        # Dictionary mit Hyperparameterkandidaten erzeugen
+        hyperparameters = dict(C=C, gamma=gamma)
+
+        svr = SVR()
+        # Gittersuche erstellen
+        gridsearch = GridSearchCV(svr, hyperparameters, cv=10, verbose=1, scoring="neg_mean_squared_error")
+        # Gittersuche anpassen
+        best_model = gridsearch.fit(self.inputData_prepared, self.outputData)
+
+        print('Best C:', best_model.best_estimator_.get_params()['C'])
+        print('Best gamma:', best_model.best_estimator_.get_params()['gamma'])
+        print('Best score :', np.sqrt(-best_model.best_score_))
+        return np.sqrt(-best_model.best_score_)
 
 
     def crossValidation(self, ols, x_train, y_train):
