@@ -12,7 +12,8 @@ from data_script.data_preparation import Data_Preparation
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.ensemble import RandomForestRegressor
 import joblib
-
+from sklearn.linear_model import Lasso
+from sklearn.model_selection import GridSearchCV
 
 class Trainer:
     def __init__(self):
@@ -37,6 +38,7 @@ class Trainer:
         self.linear_regression()
         self.decisionTreeRegression()
         self.randomForestRegression()
+        self.lassoRegressor()
 
         #Load a Model
         # model=joblib.load("mymodel.pkl")
@@ -48,13 +50,13 @@ class Trainer:
         lin_reg = LinearRegression()
 
         # # training the algorithm
-        lin_reg.fit(self.inputData_prepared, self.outputData)
+        lin_reg.fit(self.x_train, self.y_train)
         # print("linearRegression_intercept: " + str(ols.intercept_))
         # For retrieving the slope:
         # print("linearRegression_coef: " + str(ols.coef_))
-        y_predict = lin_reg.predict(self.inputData_prepared)
+        y_predict = lin_reg.predict(self.x_test)
 
-        df = pd.DataFrame({'Actual': self.outputData.values.flatten(), 'Predicted': y_predict.flatten()})
+        df = pd.DataFrame({'Actual': self.y_test.values.flatten(), 'Predicted': y_predict.flatten()})
         print("\nResults of prediciting inputData_prepared: \n" + str(df))
         df1 = df.head(25)
         df1.plot(kind='bar', figsize=(16, 10))
@@ -63,7 +65,7 @@ class Trainer:
         plt.legend()
         plt.show()
 
-        lin_mse = mean_squared_error(self.outputData, y_predict)
+        lin_mse = mean_squared_error(self.y_test, y_predict)
         lin_rmse = np.sqrt(lin_mse)
         print("RMSE of linear regression: " + str(lin_rmse))
         lin_scores = cross_val_score(lin_reg, self.inputData_prepared, self.outputData,
@@ -73,7 +75,7 @@ class Trainer:
         self.display_scores(lin_rmse_scores)
 
         fileCounter = self.getFileCounter("lin_reg_%s.pkl")
-        joblib.dump(lin_reg, self.path_model + "lin_reg_%s.pkl" % fileCounter)
+        #joblib.dump(lin_reg, self.path_model + "lin_reg_%s.pkl" % fileCounter)
 
     def decisionTreeRegression(self):
         print(
@@ -91,7 +93,7 @@ class Trainer:
         tree_rmse_scores = np.sqrt(-scores)
         self.display_scores(tree_rmse_scores)
         fileCounter = self.getFileCounter("tree_reg_%s.pkl")
-        joblib.dump(tree_reg, self.path_model + "tree_reg_%s.pkl" % fileCounter)
+        #joblib.dump(tree_reg, self.path_model + "tree_reg_%s.pkl" % fileCounter)
 
     def randomForestRegression(self):
         print(
@@ -109,7 +111,46 @@ class Trainer:
         forest_rmse_scores = np.sqrt(-scores)
         self.display_scores(forest_rmse_scores)
         fileCounter = self.getFileCounter("forest_reg_%s.pkl")
-        joblib.dump(forest_reg, self.path_model + "forest_reg_%s.pkl" % fileCounter)
+        #joblib.dump(forest_reg, self.path_model + "forest_reg_%s.pkl" % fileCounter)
+
+
+    def lassoRegressor(self):
+
+        bestScore = -99999999
+
+        # we look for a good hyperparameter, so we go throgh possible values with a for loop
+        alphas = np.arange(0.1, 1.5, 0.1)
+        for a in alphas:
+            # create a losso model
+            lasso = Lasso(a)
+            score = cross_val_score(lasso, self.inputData_prepared, self.outputData, cv=10, scoring="neg_mean_squared_error")
+            score = score.mean()
+            #check if the new score is better than the old and save new hyperparameter if true
+            if(score > bestScore):
+                bestScore = score
+                bestAlpha = a
+
+        lasso = Lasso(bestAlpha)
+        lasso_model = lasso.fit(self.x_train, self.y_train)
+
+        print()
+
+
+        # Dictionary mit Hyperparameterkandidaten erzeugen
+        hyperparameters = dict(alpha=alphas)
+
+        # Gittersuche erstellen
+        gridsearch = GridSearchCV(lasso, hyperparameters, cv=10, verbose=0, scoring="neg_mean_squared_error")
+        # Gittersuche anpassen
+        best_model = gridsearch.fit(self.inputData_prepared, self.outputData)
+
+        print('Bester Strafterm:', best_model.best_estimator_.get_params()['alpha'])
+        print("lol")
+
+        # test the model on some data
+        #lasso = Lasso(bestAlpha)
+        #model = lasso.fit()
+
 
     def crossValidation(self, ols, x_train, y_train):
         # Je höher der Wert von MSE, desto schlechter ist das Modell.
