@@ -2,13 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="64c5a77c-c8e0-4730-930d-9c22f4d89a39" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/CorrelationMatrix_preparedData.xlsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CorrelationMatrix_unpreparedData.xlsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data_script/data.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_script/data.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/data_script/data_preparation.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_script/data_preparation.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/trainer.py" beforeDir="false" afterPath="$PROJECT_DIR$/trainer.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/visualisation/visualisation.py" beforeDir="false" afterPath="$PROJECT_DIR$/visualisation/visualisation.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -21,6 +18,7 @@
   </component>
   <component name="ProjectId" id="1cwkTu9DoQwhzyLJ7qy2c781eI6" />
   <component name="PropertiesComponent">
+    <property name="ToolWindowDuplicates.ShowToolbar" value="false" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
@@ -139,7 +137,8 @@
       <workItem from="1593200800297" duration="12342000" />
       <workItem from="1593346298256" duration="368000" />
       <workItem from="1593697077285" duration="3862000" />
-      <workItem from="1593776286594" duration="18903000" />
+      <workItem from="1593776286594" duration="35649000" />
+      <workItem from="1593951706984" duration="36439000" />
     </task>
     <task id="LOCAL-00001" summary="- Folder sources,datasets&#10;- requirements.txt">
       <created>1592827780438</created>
@@ -169,7 +168,14 @@
       <option name="project" value="LOCAL" />
       <updated>1593346416134</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="- Linear Regression aufgeräumt&#10;- DecisionTree&#10;- RandomForest &#10;- Model Speicherung mit Counter um modelle nicht zu überschreiben&#10;- baseRent aus dem MinMaxScaler rausgenommen">
+      <created>1593867419127</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1593867419127</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -193,7 +199,8 @@
     <MESSAGE value="- gitognore idea" />
     <MESSAGE value="- Sync Read Me" />
     <MESSAGE value="- linear regression angefangen" />
-    <option name="LAST_COMMIT_MESSAGE" value="- linear regression angefangen" />
+    <MESSAGE value="- Linear Regression aufgeräumt&#10;- DecisionTree&#10;- RandomForest &#10;- Model Speicherung mit Counter um modelle nicht zu überschreiben&#10;- baseRent aus dem MinMaxScaler rausgenommen" />
+    <option name="LAST_COMMIT_MESSAGE" value="- Linear Regression aufgeräumt&#10;- DecisionTree&#10;- RandomForest &#10;- Model Speicherung mit Counter um modelle nicht zu überschreiben&#10;- baseRent aus dem MinMaxScaler rausgenommen" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -202,11 +209,6 @@
           <url>file://$PROJECT_DIR$/reader.py</url>
           <line>33</line>
           <option name="timeStamp" value="8" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/trainer.py</url>
-          <line>37</line>
-          <option name="timeStamp" value="54" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -220,6 +222,6 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/rental_predictor$visualisation.coverage" NAME="visualisation Coverage Results" MODIFIED="1592829973494" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/visualisation" />
-    <SUITE FILE_PATH="coverage/rental_predictor$main.coverage" NAME="main Coverage Results" MODIFIED="1593812914241" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/rental_predictor$main.coverage" NAME="main Coverage Results" MODIFIED="1593990034305" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

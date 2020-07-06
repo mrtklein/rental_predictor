@@ -6,6 +6,7 @@ from sklearn.impute import KNNImputer
 from visualisation.visualisation import Visualisation as vis
 from pandas import ExcelWriter
 
+
 class Data_Preparation:
     def __init__(self):
         # class memeber for minmax Scale.
@@ -96,19 +97,19 @@ class Data_Preparation:
         # as opposed to setting it manually to 0. Therefor we manually set all NaNs in this column
         df.noParkSpaces = df.noParkSpaces.replace({np.nan: 0})
 
-        #filling Nans in TypeOfFlat
+        # filling Nans in TypeOfFlat
         df.typeOfFlat = df.typeOfFlat.replace({np.nan: "apartment"})
 
         # one hot encoding
         df = pd.get_dummies(df, prefix=["geo_plz", "typeOfFlat"], columns=["geo_plz", "typeOfFlat"], dummy_na=False)
-        #df = df.drop(["geo_plz_nan"], axis=1)
-
+        # df = df.drop(["geo_plz_nan"], axis=1)
 
         # normalize float values
         self.minmax_scale = preprocessing.MinMaxScaler(feature_range=(0, 1))
-        df[['picturecount', 'yearConstructed', 'livingSpace', 'noRooms', 'floor', 'numberOfFloors']] \
+        df[['picturecount', 'yearConstructed', 'livingSpace', 'noRooms', 'floor', 'numberOfFloors', 'noParkSpaces']] \
             = self.minmax_scale.fit_transform(
-            df[['picturecount', 'yearConstructed', 'livingSpace', 'noRooms', 'floor', 'numberOfFloors']])
+            df[['picturecount', 'yearConstructed', 'livingSpace', 'noRooms', 'floor', 'numberOfFloors',
+                'noParkSpaces']])
         # , "baseRent"
         return df
 
